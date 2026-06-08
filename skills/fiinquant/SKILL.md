@@ -9,7 +9,7 @@ Exposes the FiinQuant Vietnamese financial data library and documentation search
 
 ## Installation & Setup
 
-Please follow the step-by-step setup instructions in the root [README.md](../../README.md) to install dependencies, set up credentials, and configure the Model Context Protocol (MCP) server.
+Please follow the step-by-step setup instructions in the root [README.md](file:///Users/manhhanguyen/Downloads/test/README.md) to install dependencies, set up credentials, and configure the Model Context Protocol (MCP) server.
 
 ## Install Library (Manual)
 

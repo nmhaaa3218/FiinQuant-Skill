@@ -6,6 +6,18 @@ This repository is designed to be fully self-installable by AI agents (like Curs
 
 ---
 
+## For LLM Agents
+
+Fetch the full guide and follow it step by step:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
+```
+
+The guide covers: installing the FiinQuantX library from the custom index, downgrading signalrcore to a compatible version (0.9.x), credentials configuration in `.env`, validating the login using `quickstart.py`, and registering the Model Context Protocol (MCP) server. Don't summarize it; read it end to end.
+
+---
+
 ## 🛠️ Step-by-Step Setup (For Humans & AI Agents)
 
 AI assistants should execute these steps using their native system/file tools:

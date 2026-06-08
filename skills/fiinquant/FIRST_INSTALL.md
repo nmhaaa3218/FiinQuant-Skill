@@ -1,106 +1,84 @@
-# FiinQuant Skill Installation Guide
+# FiinQuant Skill Setup & Reference Guide
 
-## Setup and Configurations
+This guide describes how to configure the FiinQuant skill, manage library dependencies, set up credentials, and register the documentation search Model Context Protocol (MCP) server.
 
-Please follow the manual installation instructions below to configure the skill.
+---
 
-### Step 1: Install FiinQuantX Library
+### Step 1: Install FiinQuantX Library & Dependencies
 
-**Choose installation location:**
+You can install the library globally or within a virtual environment.
 
-1. **Global (system-wide)** - Shared across all projects
+#### Option A: Global Installation
 ```bash
 pip install --extra-index-url https://fiinquant.github.io/fiinquantx/simple fiinquantx
 ```
 
-2. **Virtual Environment (.venv)** - Installed in `.venv` folder
+#### Option B: Virtual Environment (.venv)
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install --extra-index-url https://fiinquant.github.io/fiinquantx/simple fiinquantx
 ```
 
-**Check signalrcore:**
+#### Check and Fix signalrcore Version
+The `fiinquantx` library depends on `signalrcore`, but version `>= 1.0.0` is incompatible. Run this patch to ensure compatibility:
 ```bash
-pip show signalrcore
+pip uninstall signalrcore -y && pip install "signalrcore>=0.9,<1.0"
 ```
-If >= 1.0.0, uninstall and reinstall:
-```bash
-pip uninstall signalrcore
-pip install signalrcore==0.9.x
-```
+*(Append `--break-system-packages` if installing globally on a system Python environment managed by PEP 668).*
 
 ---
 
 ### Step 2: Configure Credentials
 
-**Do you have a FiinQuant account?**
-
-- **Yes** → Want to save credentials to `.env`?
-  ```env
-  # Save at ~/.skills/fiinquant/.env
-  FIIN_USERNAME=your_username
-  FIIN_PASSWORD=your_password
-  ```
-
-- **No** → Register at [fiinquant.vn](https://fiinquant.vn)
-
----
-
-### Step 3: Register Skill with Agent
-
-Add skill to your agent harness config. Skill location: `~/.skills/fiinquant`
-
-**Config examples by agent:**
-
-| Agent | Config Location |
-|-------|-----------------|
-| OpenCode | `~/.config/opencode/opencode.json` |
-| Codex | `~/.codex/config.toml` |
-| Cursor | `~/.cursor/settings.json` |
-| Claude Code | `~/.claude/settings.json` |
-| Antigravity | `~/.config/antigravity/config.json` |
-
----
-
-## Skill Structure
-
+Create a `.env` file at the root of the workspace (or inside [skills/fiinquant/](file:///Users/manhhanguyen/Downloads/test/skills/fiinquant/)) containing your FiinQuant credentials:
+```env
+FIIN_USERNAME=your_username
+FIIN_PASSWORD=your_password
 ```
-~/.skills/fiinquant/
-├── SKILL.md              # Skill definition
-├── FIRST_INSTALL.md      # This guide
-├── .env                  # Credentials (if saved)
-└── scripts/
-    ├── fiinquant_search.py   # Documentation search tool
-    └── first_install.py      # Interactive installer
-```
+*(If you do not have an account, register at [fiinquant.vn](https://fiinquant.vn))*
 
 ---
 
-## Verify Installation
+### Step 3: Verify the Setup (Sanity Check)
 
-```python
-from FiinQuantX import FiinSession
-
-client = FiinSession(
-    username='YOUR_USERNAME',
-    password='YOUR_PASSWORD'
-).login()
-
-print("Login successful!")
-```
-
----
-
-## Using Documentation Search Tool
-
+To verify that the installation succeeded and the credentials are valid, run the root-level quickstart script:
 ```bash
-python scripts/fiinquant_search.py "WebSocket realtime"
+python3 quickstart.py
+```
+Upon success, this script will log in to the FiinQuant server and print the list of stock tickers in the VN30 index.
+
+---
+
+### Step 4: Register the Skill as a Native MCP Server
+
+Expose the documentation search tool natively to your agent harness (like Cursor, Claude Desktop, Claude Code, or Antigravity) by configuring it as a Model Context Protocol (MCP) server.
+
+Add this block to your agent's MCP settings configuration:
+
+```json
+"mcpServers": {
+  "fiinquant-docs": {
+    "command": "python3",
+    "args": [
+      "<absolute_path_to_this_repository>/skills/fiinquant/scripts/fiinquant_search.py",
+      "--mcp"
+    ]
+  }
+}
 ```
 
-```python
-from scripts.fiinquant_search import search_documents, get_document_outline
+---
 
-results = search_documents("WebSocket realtime", limit=5)
-outline = get_document_outline()
-```
+## 🤖 Available MCP Tools
+
+When loaded, the agent gains access to the following documentation search tools:
+
+1. **`search_documents`**: Search the live documentation.
+   - Args: `query` (string), `limit` (integer, optional)
+2. **`get_document_outline`**: Fetch sitemap/documentation outline structure.
+   - Args: None
+3. **`read_document_page`**: Get the full markdown text of a specific page path.
+   - Args: `path` (string)
+4. **`get_full_corpus`**: Retrieve the entire documentation text block for comprehensive reasoning.
+   - Args: None
