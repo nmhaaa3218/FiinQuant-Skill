@@ -4,7 +4,7 @@ FiinQuant Skill Self-Installer
 
 Usage:
     Agent co the tu dong cai dat skill nay bang cach fetch installation script tu URL:
-    https://raw.githubusercontent.com/USER/repo/refs/heads/main/install_fiinquant.py
+    https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py
 
     Hoac chay truc tiep:
     python install_fiinquant.py
