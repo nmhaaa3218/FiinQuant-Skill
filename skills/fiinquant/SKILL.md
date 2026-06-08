@@ -5,16 +5,11 @@ description: Python financial data library for Vietnamese stock market — realt
 
 # FiinQuantX Skill
 
-## Agent Self-Install
+Exposes the FiinQuant Vietnamese financial data library and documentation search as a native skill/toolset to AI agents.
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
-```
+## Installation & Setup
 
-Or read the guide manually:
-```bash
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
-```
+Please follow the step-by-step setup instructions in the root [README.md](../../README.md) to install dependencies, set up credentials, and configure the Model Context Protocol (MCP) server.
 
 ## Install Library (Manual)
 

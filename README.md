@@ -1,42 +1,76 @@
 # FiinQuant Skill
 
-Python financial data library for Vietnamese stock market.
+A financial data skill and documentation search toolset for Vietnamese stock market data (realtime WebSocket, historical data, financial reports, technical indicators). 
 
-## One-Line Agent Install
+This repository is designed to be fully self-installable by AI agents (like Cursor, Claude Code, Hermes, or Antigravity) when you toss them this repository link.
 
+---
+
+## 🛠️ Step-by-Step Setup (For Humans & AI Agents)
+
+AI assistants should execute these steps using their native system/file tools:
+
+### Step 1: Install the Python Library & Dependencies
+
+Install the `fiinquantx` library from the custom package registry:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
+pip install --extra-index-url https://fiinquant.github.io/fiinquantx/simple fiinquantx
 ```
 
-Agent can also read the guide manually:
-
+#### Important: Downgrade `signalrcore`
+The `fiinquantx` package relies on `signalrcore`, but versions `>= 1.0.0` are incompatible. You must downgrade it to `0.9.x`:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
+pip uninstall signalrcore -y && pip install "signalrcore>=0.9,<1.0"
 ```
 
-## What is FiinQuantX?
+*Note: If installing on system Python (e.g. macOS Homebrew) and blocked by PEP 668, append `--break-system-packages` to the pip commands or activate a virtual environment (`.venv`) first.*
 
-- **Realtime data** from HOSE, HNX, UPCOM via WebSocket
-- **Historical data** full timeframe 1m, 5m, 15m, 1h, 4h, 1D
-- **Financial reports** by year, quarter, consolidated/separate
-- **Technical indicators**: MA, EMA, RSI, MACD, Bollinger Bands
-- **Smart money flow**: BU-SD, Foreign investor (NĐTNN) realtime
+### Step 2: Configure Credentials
 
-## Quick Start
+Create a `.env` file at the root of the workspace (or inside [skills/fiinquant/](file:///Users/manhhanguyen/Downloads/test/skills/fiinquant/)) containing your FiinQuant credentials:
+```env
+FIIN_USERNAME=your_username
+FIIN_PASSWORD=your_password
+```
+*(If you do not have an account, register at [fiinquant.vn](https://fiinquant.vn))*
 
-```python
-from FiinQuantX import FiinSession
+### Step 3: Verify the Setup (Sanity Check)
 
-client = FiinSession(
-    username='YOUR_USERNAME',
-    password='YOUR_PASSWORD'
-).login()
+To verify that your library installation and credentials work, run:
+```bash
+python3 quickstart.py
+```
+If setup successfully, it will authenticate with FiinQuant and print the VN30 stock tickers.
+
+### Step 4: Register the Skill as a Native MCP Server
+
+Expose the documentation search tool as a native capability to your coding assistant by configuring it as a Model Context Protocol (MCP) server. 
+
+Add the following to your agent harness configuration (e.g., Cursor MCP Settings, `claude_desktop_config.json`, or the system settings):
+
+```json
+"mcpServers": {
+  "fiinquant-docs": {
+    "command": "python3",
+    "args": [
+      "<absolute_path_to_this_repository>/skills/fiinquant/scripts/fiinquant_search.py",
+      "--mcp"
+    ]
+  }
+}
 ```
 
-## Documentation
+---
 
-See [skills/fiinquant/FIRST_INSTALL.md](./skills/fiinquant/FIRST_INSTALL.md) for detailed setup instructions.
+## 🤖 Available MCP Tools
 
-## License
+Once loaded as a skill or MCP server, the following tools will be available to the agent:
 
-MIT
+1. **`search_documents`**: Search the live FiinQuant documentation for functions, APIs, or real-time setup guides.
+   - Arguments: `query` (string), `limit` (integer, optional)
+2. **`get_document_outline`**: Fetch the complete documentation outline / sitemap.
+   - Arguments: None
+3. **`read_document_page`**: Extract the full markdown content of a specific documentation page.
+   - Arguments: `path` (string)
+4. **`get_full_corpus`**: Retrieve the entire documentation corpus in one text file (useful for offline reasoning).
+   - Arguments: None

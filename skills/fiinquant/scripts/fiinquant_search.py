@@ -238,11 +238,141 @@ def run_tests() -> bool:
     return all_passed
 
 
+def respond(message_id, result=None, error=None):
+    response = {"jsonrpc": "2.0"}
+    if message_id is not None:
+        response["id"] = message_id
+    if error is not None:
+        response["error"] = error
+    else:
+        response["result"] = result
+    sys.__stdout__.write(json.dumps(response, ensure_ascii=False) + "\n")
+    sys.__stdout__.flush()
+
+
+def run_mcp_loop():
+    import traceback
+    
+    # Redirect sys.stdout to sys.stderr so prints don't corrupt JSON-RPC stdout
+    sys.stdout = sys.stderr
+    stdin = sys.__stdin__
+    
+    while True:
+        line = stdin.readline()
+        if not line:
+            break
+        try:
+            request = json.loads(line)
+            method = request.get("method")
+            msg_id = request.get("id")
+            
+            if method == "initialize":
+                respond(msg_id, {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {
+                        "tools": {}
+                    },
+                    "serverInfo": {
+                        "name": "fiinquant-search",
+                        "version": "1.0.0"
+                    }
+                })
+            elif method == "notifications/initialized":
+                pass
+            elif method == "tools/list":
+                respond(msg_id, {
+                    "tools": [
+                        {
+                            "name": "search_documents",
+                            "description": "Search the FiinQuant documentation for specific functions, WebSocket realtime data, trading APIs, or financial reports.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "query": {"type": "string", "description": "The search query (e.g., 'realtime data', 'historical data')"},
+                                    "limit": {"type": "integer", "description": "Max number of results to return (default: 5)"}
+                                },
+                                "required": ["query"]
+                            }
+                        },
+                        {
+                            "name": "get_document_outline",
+                            "description": "Get the complete outline / sitemap of all available documentation pages.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {}
+                            }
+                        },
+                        {
+                            "name": "read_document_page",
+                            "description": "Read the detailed markdown content of a specific page from the documentation outline.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "path": {"type": "string", "description": "The documentation page path (e.g., '/ham-va-cong-thuc/2.-du-lieu-giao-dich/2.1.-ham-du-lieu-realtime.md')"}
+                                },
+                                "required": ["path"]
+                            }
+                        },
+                        {
+                            "name": "get_full_corpus",
+                            "description": "Retrieve the entire documentation corpus as a single text file. Useful for offline reasoning.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {}
+                            }
+                        }
+                    ]
+                })
+            elif method == "tools/call":
+                params = request.get("params", {})
+                name = params.get("name")
+                arguments = params.get("arguments", {})
+                
+                if name == "search_documents":
+                    query = arguments.get("query")
+                    limit = arguments.get("limit", 5)
+                    results = search_documents(query, limit=limit)
+                    text_content = json.dumps(results, indent=2, ensure_ascii=False)
+                    respond(msg_id, {
+                        "content": [{"type": "text", "text": text_content}]
+                    })
+                elif name == "get_document_outline":
+                    outline = get_document_outline()
+                    text_content = json.dumps(outline, indent=2, ensure_ascii=False)
+                    respond(msg_id, {
+                        "content": [{"type": "text", "text": text_content}]
+                    })
+                elif name == "read_document_page":
+                    path = arguments.get("path")
+                    content = read_document_page(path)
+                    respond(msg_id, {
+                        "content": [{"type": "text", "text": content}]
+                    })
+                elif name == "get_full_corpus":
+                    corpus = get_full_corpus()
+                    respond(msg_id, {
+                        "content": [{"type": "text", "text": corpus}]
+                    })
+                else:
+                    respond(msg_id, error={"code": -32601, "message": f"Method not found: {name}"})
+            else:
+                if msg_id is not None:
+                    respond(msg_id, {})
+        except Exception as e:
+            err_msg = traceback.format_exc()
+            sys.stderr.write(f"Error in MCP loop: {err_msg}\n")
+            if 'msg_id' in locals() and msg_id is not None:
+                respond(msg_id, error={"code": -32603, "message": str(e)})
+
+
 def main():
     if len(sys.argv) > 1:
-        query = " ".join(sys.argv[1:])
-        results = search_documents(query)
-        print_search_results(results)
+        if sys.argv[1] == "--mcp":
+            run_mcp_loop()
+        else:
+            query = " ".join(sys.argv[1:])
+            results = search_documents(query)
+            print_search_results(results)
     else:
         run_tests()
 

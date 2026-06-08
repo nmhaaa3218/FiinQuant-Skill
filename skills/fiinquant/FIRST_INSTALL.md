@@ -1,14 +1,8 @@
 # FiinQuant Skill Installation Guide
 
-## Agent Self-Install (Automatic)
+## Setup and Configurations
 
-Agent can self-install by running:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
-```
-
-## Manual Step-by-Step Installation
+Please follow the manual installation instructions below to configure the skill.
 
 ### Step 1: Install FiinQuantX Library
 
@@ -75,7 +69,6 @@ Add skill to your agent harness config. Skill location: `~/.skills/fiinquant`
 ~/.skills/fiinquant/
 ├── SKILL.md              # Skill definition
 ├── FIRST_INSTALL.md      # This guide
-├── install_fiinquant.py  # Self-install script
 ├── .env                  # Credentials (if saved)
 └── scripts/
     ├── fiinquant_search.py   # Documentation search tool
