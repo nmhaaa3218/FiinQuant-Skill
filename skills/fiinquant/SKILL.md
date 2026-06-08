@@ -1,34 +1,35 @@
+---
+name: fiinquant
+description: Python financial data library for Vietnamese stock market — realtime WebSocket, historical data, financial reports, and technical analysis indicators.
+---
+
 # FiinQuantX Skill
 
-Thư viện dữ liệu tài chính Python cho thị trường chứng khoán Việt Nam.
-
-## Cài đặt tự động (Agent Self-Install)
-
-Agent có thể tự cài đặt skill này bằng cách fetch installation script:
+## Agent Self-Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/refs/heads/main/install_fiinquant.py | python3
+curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
 ```
 
-Hoặc đọc và follow hướng dẫn:
+Or read the guide manually:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/refs/heads/main/FIRST_INSTALL.md
+curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
 ```
 
-## Cài đặt thư viện (Manual)
+## Install Library (Manual)
 
 ```bash
 pip install --extra-index-url https://fiinquant.github.io/fiinquantx/simple fiinquantx
 ```
 
-**Lưu ý:** Kiểm tra signalrcore - nếu >= 1.0.0 thì gỡ và cài lại 0.9.x:
+**Note:** Check signalrcore - if >= 1.0.0, uninstall and reinstall 0.9.x:
 ```bash
 pip show signalrcore
 pip uninstall signalrcore
 pip install signalrcore==0.9.x
 ```
 
-## Đăng nhập
+## Login
 
 ```python
 from FiinQuantX import FiinSession
@@ -39,17 +40,17 @@ client = FiinSession(
 ).login()
 ```
 
-## Điểm nổi bật
+## Features
 
-- **Dữ liệu realtime** từ HOSE, HNX, UPCOM qua WebSocket
-- **Dữ liệu lịch sử** đầy đủ timeframe 1m, 5m, 15m, 1h, 4h, 1D
-- **Báo cáo tài chính** theo năm, quý, hợp nhất/riêng lẻ
-- **Chỉ báo TA** tích hợp: MA, EMA, RSI, MACD, Bollinger Bands
-- **Dòng tiền thông minh**: BU-SD, NĐTNN realtime
+- **Realtime data** from HOSE, HNX, UPCOM via WebSocket
+- **Historical data** full timeframe 1m, 5m, 15m, 1h, 4h, 1D
+- **Financial reports** by year, quarter, consolidated/separate
+- **Technical indicators**: MA, EMA, RSI, MACD, Bollinger Bands
+- **Smart money flow**: BU-SD, Foreign investor (NĐTNN) realtime
 
-## Lỗi thường gặp
+## Common Errors
 
-| Mã lỗi | Mô tả |
-|--------|-------|
-| 400 | Tài khoản không tồn tại hoặc mật khẩu không đúng |
-| NameError | Chưa đăng nhập trước khi gọi dữ liệu |
+| Error Code | Description |
+|------------|-------------|
+| 400 | Account does not exist or incorrect password |
+| NameError | Not logged in before calling data |

@@ -1,36 +1,36 @@
-# Hướng dẫn cài đặt FiinQuant Skill
+# FiinQuant Skill Installation Guide
 
-## Agent Self-Install (Tự động)
+## Agent Self-Install (Automatic)
 
-Agent có thể tự cài đặt bằng cách chạy:
+Agent can self-install by running:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_USER/YOUR_REPO/refs/heads/main/install_fiinquant.py | python3
+curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
 ```
 
-## Cài đặt thủ công từng bước
+## Manual Step-by-Step Installation
 
-### Bước 1: Cài đặt thư viện FiinQuantX
+### Step 1: Install FiinQuantX Library
 
-**Chọn nơi cài đặt:**
+**Choose installation location:**
 
-1. **Global (toàn hệ thống)** - Dùng chung cho mọi project
+1. **Global (system-wide)** - Shared across all projects
 ```bash
 pip install --extra-index-url https://fiinquant.github.io/fiinquantx/simple fiinquantx
 ```
 
-2. **Virtual Environment (.venv)** - Cài riêng trong thư mục `.venv`
+2. **Virtual Environment (.venv)** - Installed in `.venv` folder
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install --extra-index-url https://fiinquant.github.io/fiinquantx/simple fiinquantx
 ```
 
-**Kiểm tra signalrcore:**
+**Check signalrcore:**
 ```bash
 pip show signalrcore
 ```
-Nếu >= 1.0.0, gỡ và cài lại:
+If >= 1.0.0, uninstall and reinstall:
 ```bash
 pip uninstall signalrcore
 pip install signalrcore==0.9.x
@@ -38,59 +38,53 @@ pip install signalrcore==0.9.x
 
 ---
 
-### Bước 2: Cấu hình thông tin đăng nhập
+### Step 2: Configure Credentials
 
-**Bạn đã có tài khoản FiinQuant chưa?**
+**Do you have a FiinQuant account?**
 
-- **Có** → Có muốn lưu vào file `.env` không?
+- **Yes** → Want to save credentials to `.env`?
   ```env
-  # Lưu tại ~/.config/opencode/skills/fiinquant/.env
+  # Save at ~/.skills/fiinquant/.env
   FIIN_USERNAME=your_username
   FIIN_PASSWORD=your_password
   ```
 
-- **Chưa có** → Đăng ký tại [fiinquant.vn](https://fiinquant.vn)
+- **No** → Register at [fiinquant.vn](https://fiinquant.vn)
 
 ---
 
-### Bước 3: Cài đặt Skill cho Agent
+### Step 3: Register Skill with Agent
 
-Chọn cách đăng ký:
+Add skill to your agent harness config. Skill location: `~/.skills/fiinquant`
 
-1. **Global Skill** - Agent dùng được ở mọi project
-   - Thêm vào `~/.config/opencode/opencode.json`:
-   ```json
-   {
-     "skills": [
-       {
-         "name": "fiinquant",
-         "location": "~/.config/opencode/skills/fiinquant"
-       }
-     ]
-   }
-   ```
+**Config examples by agent:**
 
-2. **Project-based** - Chỉ dùng trong project hiện tại
-   - Thêm vào `.opencode/opencode.json` trong project
+| Agent | Config Location |
+|-------|-----------------|
+| OpenCode | `~/.config/opencode/opencode.json` |
+| Codex | `~/.codex/config.toml` |
+| Cursor | `~/.cursor/settings.json` |
+| Claude Code | `~/.claude/settings.json` |
+| Antigravity | `~/.config/antigravity/config.json` |
 
 ---
 
-## Cấu trúc Skill
+## Skill Structure
 
 ```
-~/.config/opencode/skills/fiinquant/
-├── SKILL.md              # Định nghĩa skill
-├── FIRST_INSTALL.md      # Hướng dẫn cài đặt
-├── install_fiinquant.py  # Script tự cài đặt
-├── .env                  # Credentials (nếu lưu)
+~/.skills/fiinquant/
+├── SKILL.md              # Skill definition
+├── FIRST_INSTALL.md      # This guide
+├── install_fiinquant.py  # Self-install script
+├── .env                  # Credentials (if saved)
 └── scripts/
-    ├── fiinquant_search.py   # Công cụ tìm kiếm tài liệu
-    └── first_install.py      # Script cài đặt interactive
+    ├── fiinquant_search.py   # Documentation search tool
+    └── first_install.py      # Interactive installer
 ```
 
 ---
 
-## Kiểm tra cài đặt
+## Verify Installation
 
 ```python
 from FiinQuantX import FiinSession
@@ -100,12 +94,12 @@ client = FiinSession(
     password='YOUR_PASSWORD'
 ).login()
 
-print("Đăng nhập thành công!")
+print("Login successful!")
 ```
 
 ---
 
-## Sử dụng Công cụ tìm kiếm tài liệu
+## Using Documentation Search Tool
 
 ```bash
 python scripts/fiinquant_search.py "WebSocket realtime"

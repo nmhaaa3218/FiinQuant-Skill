@@ -3,10 +3,10 @@
 FiinQuant Skill Self-Installer
 
 Usage:
-    Agent co the tu dong cai dat skill nay bang cach fetch installation script tu URL:
-    https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py
+    Agent can self-install by fetching this script:
+    curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
 
-    Hoac chay truc tiep:
+    Or run directly:
     python install_fiinquant.py
 """
 
@@ -32,7 +32,7 @@ def print_step(step_num, text):
     print(f"\n[{step_num}] {text}")
 
 
-def ask_choice(options, prompt="Chọn một tùy chọn"):
+def ask_choice(options, prompt="Choose an option"):
     for i, opt in enumerate(options, 1):
         print(f"  {i}. {opt}")
     while True:
@@ -42,7 +42,7 @@ def ask_choice(options, prompt="Chọn một tùy chọn"):
                 return choice
         except ValueError:
             pass
-        print("Vui lòng nhập số hợp lệ.")
+        print("Please enter a valid number.")
 
 
 def ask_yes_no(prompt, default=None):
@@ -63,42 +63,27 @@ def ask_yes_no(prompt, default=None):
             return True
         if response in ("n", "no"):
             return False
-        print("Vui lòng nhập 'y' hoặc 'n'.")
+        print("Please enter 'y' or 'n'.")
 
 
 def get_default_skill_dir():
     home = Path.home()
-    if sys.platform == "win32":
-        return home / "AppData" / "Roaming" / "opencode" / "skills"
-    else:
-        return home / ".config" / "opencode" / "skills"
+    return home / ".skills" / SKILL_NAME
 
 
 def get_skill_install_dir():
-    default_dir = get_default_skill_dir() / SKILL_NAME
+    default_dir = get_default_skill_dir()
 
-    print(f"\nMặc định, skill sẽ được cài tại:")
+    print(f"\nDefault skill install location:")
     print(f"  {default_dir}")
 
-    use_default = ask_yes_no("Bạn có muốn dùng đường dẫn này không", default=True)
+    use_default = ask_yes_no("Use this location", default=True)
 
     if use_default:
         return default_dir
 
-    custom = input("\nNhập đường dẫn tùy chỉnh: ").strip()
+    custom = input("\nEnter custom path: ").strip()
     return Path(custom) if custom else default_dir
-
-
-def fetch_installer_content(url):
-    """Fetch installer script content from URL."""
-    print(f"  Đang tải từ: {url}")
-    try:
-        req = Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urlopen(req, timeout=30) as response:
-            return response.read().decode("utf-8")
-    except URLError as e:
-        print(f"  [!] Không thể tải: {e}")
-        return None
 
 
 def download_skill_files(install_dir):
@@ -115,7 +100,7 @@ def download_skill_files(install_dir):
         ("scripts/first_install.py", f"{base_url}/scripts/first_install.py"),
     ]
 
-    print(f"\n  Đang tải skill files...")
+    print(f"\n  Downloading skill files...")
 
     for dest_path, url in files_to_download:
         full_dest = install_dir / dest_path
@@ -130,19 +115,19 @@ def download_skill_files(install_dir):
                 f.write(content)
             print(f"  [OK] {dest_path}")
         except URLError as e:
-            print(f"  [!] Không thể tải {dest_path}: {e}")
+            print(f"  [!] Failed to download {dest_path}: {e}")
 
     return True
 
 
 def install_library():
-    print_header("Cài đặt thư viện FiinQuantX")
+    print_header("Install FiinQuantX Library")
 
-    options = ["Global (toàn hệ thống)", "Virtual Environment (.venv)"]
-    choice = ask_choice(options, "Cài thư viện ở đâu")
+    options = ["Global (system-wide)", "Virtual Environment (.venv)"]
+    choice = ask_choice(options, "Install library where")
 
     if choice == 1:
-        print("  Đang cài đặt FiinQuantX globally...")
+        print("  Installing FiinQuantX globally...")
         result = subprocess.run([
             sys.executable, "-m", "pip", "install",
             "--extra-index-url", "https://fiinquant.github.io/fiinquantx/simple",
@@ -150,12 +135,12 @@ def install_library():
         ], capture_output=False)
 
         if result.returncode != 0:
-            print("  [!] Cài đặt thất bại")
+            print("  [!] Installation failed")
             return False
-        print("  [OK] FiinQuantX đã cài đặt globally")
+        print("  [OK] FiinQuantX installed globally")
     else:
         venv_dir = Path(".venv")
-        print(f"  Đang tạo virtual environment tại {venv_dir}...")
+        print(f"  Creating virtual environment at {venv_dir}...")
 
         if venv_dir.exists():
             shutil.rmtree(venv_dir)
@@ -163,48 +148,48 @@ def install_library():
         subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
 
         pip_exe = venv_dir / ("Scripts/pip.exe" if sys.platform == "win32" else "bin/pip")
-        print("  Đang cài đặt FiinQuantX trong .venv...")
+        print("  Installing FiinQuantX in .venv...")
         subprocess.run([
             str(pip_exe), "install",
             "--extra-index-url", "https://fiinquant.github.io/fiinquantx/simple",
             "fiinquantx"
         ], check=True)
-        print(f"  [OK] FiinQuantX đã cài đặt trong .venv")
+        print(f"  [OK] FiinQuantX installed in .venv")
 
     check_signalrcore()
     return True
 
 
 def check_signalrcore():
-    print("  Kiểm tra signalrcore...")
+    print("  Checking signalrcore...")
     result = subprocess.run(
         [sys.executable, "-m", "pip", "show", "signalrcore"],
         capture_output=True, text=True
     )
 
     if "1.0.0" in result.stdout or ("Version:" in result.stdout and "1." in result.stdout.split("Version:")[-1].split("\n")[0] if "Version:" in result.stdout else False):
-        print("  [!] signalrcore >= 1.0.0 được phát hiện. Đang gỡ cài đặt...")
+        print("  [!] signalrcore >= 1.0.0 detected. Uninstalling...")
         subprocess.run([sys.executable, "-m", "pip", "uninstall", "signalrcore", "-y"])
-        print("  Đang cài đặt signalrcore 0.9.x...")
+        print("  Installing signalrcore 0.9.x...")
         subprocess.run([
             sys.executable, "-m", "pip", "install", "signalrcore>=0.9,<1.0"
         ])
-        print("  [OK] signalrcore đã được cài đặt phiên bản tương thích")
+        print("  [OK] signalrcore installed compatible version")
     else:
-        print("  [OK] signalrcore version tương thích")
+        print("  [OK] signalrcore version compatible")
 
 
 def setup_credentials(install_dir):
-    print_header("Cấu hình thông tin đăng nhập")
+    print_header("Configure Credentials")
 
-    has_account = ask_yes_no("Bạn đã có tài khoản FiinQuant chưa?")
+    has_account = ask_yes_no("Do you have a FiinQuant account")
 
     if not has_account:
-        print("\n  Vui lòng đăng ký tại: https://fiinquant.vn")
-        print("  Sau khi đăng ký xong, chạy lại script này.")
+        print("\n  Please register at: https://fiinquant.vn")
+        print("  Run this script again after registration.")
         return False
 
-    save_env = ask_yes_no("Bạn có muốn lưu username/password vào file .env không?")
+    save_env = ask_yes_no("Save username/password to .env file")
 
     if save_env:
         username = input("  Username: ").strip()
@@ -215,69 +200,77 @@ def setup_credentials(install_dir):
             f.write(f"FIIN_USERNAME={username}\n")
             f.write(f"FIIN_PASSWORD={password}\n")
 
-        print(f"  [OK] Đã lưu vào {env_file}")
+        print(f"  [OK] Saved to {env_file}")
     else:
-        print("  Bạn sẽ cần nhập username/password trong code khi sử dụng.")
+        print("  You will need to enter username/password in code when using.")
 
     return True
 
 
-def register_skill(install_dir):
-    print_header("Đăng ký Skill với Agent")
-
-    options = [
-        "Global Skill - Agent dùng được ở mọi project",
-        "Project-based - Skill chỉ dùng trong project hiện tại"
+def detect_agent_harness():
+    """Detect which agent harness is being used based on config files."""
+    checks = [
+        (Path.home() / ".config" / "opencode" / "opencode.json", "opencode"),
+        (Path.home() / ".config" / "opencode" / "opencode.jsonc", "opencode"),
+        (Path.home() / ".codex" / "config.toml", "codex"),
+        (Path.home() / ".cursor" / "settings.json", "cursor"),
+        (Path.home() / ".config" / "claude", "claude"),
+        (Path.home() / ".claude" / "settings.json", "claude"),
+        (Path.home() / ".config" / "antigravity", "antigravity"),
     ]
-    choice = ask_choice(options, "Chọn cách đăng ký skill")
+
+    for path, harness in checks:
+        if path.exists():
+            return harness
+    return None
+
+
+def register_skill(install_dir):
+    print_header("Register Skill with Agent")
+
+    harness = detect_agent_harness()
+
+    if harness:
+        print(f"\n  Detected agent harness: {harness}")
+    else:
+        print("\n  Could not auto-detect agent harness.")
+
+    print(f"\n  Skill installed at: {install_dir}")
 
     skill_config = {
         "name": SKILL_NAME,
         "location": str(install_dir)
     }
 
-    if choice == 1:
-        config_paths = [
-            Path.home() / ".config" / "opencode" / "opencode.json",
-            Path.home() / ".config" / "opencode" / "opencode.jsonc",
-        ]
+    print(f"\n  To register skill, add to your agent config:")
+    print(f"\n  {skill_config}")
 
-        for config_path in config_paths:
-            if config_path.exists():
-                print(f"\n  Tìm thấy cấu hình tại: {config_path}")
-                print(f"  Vui lòng thêm skill vào mảng 'skills' trong cấu hình:")
-                print(f"\n  {skill_config}")
-                break
-        else:
-            print(f"\n  Global config không tìm thấy.")
-            print(f"  Tạo cấu hình mới tại: {config_paths[0].parent}")
-            config_paths[0].parent.mkdir(parents=True, exist_ok=True)
-            print(f"  Vui lòng thêm vào cấu hình:")
-            print(f"\n  {skill_config}")
-    else:
-        print("\n  [Project-based] Thêm skill vào cấu hình project của bạn.")
-        print(f"  Skill path: {install_dir}")
-        print(f"\n  {skill_config}")
+    print("\n  Config examples by agent:")
+    print("  - OpenCode: ~/.config/opencode/opencode.json [skills][]")
+    print("  - Codex: ~/.codex/config.toml [plugins][]")
+    print("  - Cursor: ~/.cursor/settings.json")
+    print("  - Claude Code: ~/.claude/settings.json")
+    print("  - Antigravity: ~/.config/antigravity/config.json")
 
     return True
 
 
 def main():
     print_header("FiinQuant Skill Installer")
-    print("  Hướng dẫn cài đặt tự động cho FiinQuant skill\n")
+    print("  Automated installation for FiinQuant skill\n")
 
     if GITHUB_RAW_URL:
-        print(f"  Nguồn: {GITHUB_RAW_URL}\n")
+        print(f"  Source: {GITHUB_RAW_URL}\n")
 
     install_dir = get_skill_install_dir()
 
     if GITHUB_RAW_URL:
-        print(f"\n  Đang tải skill vào {install_dir}...")
+        print(f"\n  Downloading skill to {install_dir}...")
         install_dir.mkdir(parents=True, exist_ok=True)
         download_skill_files(install_dir)
     else:
         install_dir.mkdir(parents=True, exist_ok=True)
-        print(f"\n  Tạo thư mục skill: {install_dir}")
+        print(f"\n  Created skill directory: {install_dir}")
 
         src_dir = Path(__file__).parent
         for item in src_dir.rglob("*"):
@@ -288,21 +281,21 @@ def main():
                 shutil.copy2(item, dest_path)
                 print(f"  [OK] {rel_path}")
 
-    print_step(1, "Cài đặt thư viện FiinQuantX")
+    print_step(1, "Install FiinQuantX Library")
     install_library()
 
-    print_step(2, "Cấu hình đăng nhập")
+    print_step(2, "Configure Credentials")
     if not setup_credentials(install_dir):
-        print("\n  Bỏ qua bước credentials.")
+        print("\n  Skipping credentials step.")
 
-    print_step(3, "Đăng ký Skill với Agent")
+    print_step(3, "Register Skill with Agent")
     register_skill(install_dir)
 
-    print_header("Hoàn tất!")
+    print_header("Installation Complete!")
     print(f"""
-  Skill đã được cài tại: {install_dir}
+  Skill installed at: {install_dir}
 
-  Cấu trúc:
+  Structure:
     {install_dir}/
     ├── SKILL.md
     ├── FIRST_INSTALL.md
@@ -311,9 +304,9 @@ def main():
         ├── fiinquant_search.py
         └── first_install.py
 
-  Tiếp theo:
-    1. Khởi động lại agent để sử dụng skill
-    2. Xem FIRST_INSTALL.md để biết thêm chi tiết
+  Next steps:
+    1. Restart agent to use skill
+    2. See FIRST_INSTALL.md for details
   """)
 
 

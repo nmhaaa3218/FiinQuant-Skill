@@ -1,6 +1,6 @@
-# FiinQuant Skill for Agents
+# FiinQuant Skill
 
-Thư viện dữ liệu tài chính Python cho thị trường chứng khoán Việt Nam.
+Python financial data library for Vietnamese stock market.
 
 ## One-Line Agent Install
 
@@ -8,7 +8,7 @@ Thư viện dữ liệu tài chính Python cho thị trường chứng khoán Vi
 curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/install_fiinquant.py | python3
 ```
 
-Or read the guide and follow manually:
+Agent can also read the guide manually:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
@@ -16,11 +16,11 @@ curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/hea
 
 ## What is FiinQuantX?
 
-- **Dữ liệu realtime** từ HOSE, HNX, UPCOM qua WebSocket
-- **Dữ liệu lịch sử** đầy đủ timeframe 1m, 5m, 15m, 1h, 4h, 1D
-- **Báo cáo tài chính** theo năm, quý, hợp nhất/riêng lẻ
-- **Chỉ báo TA** tích hợp: MA, EMA, RSI, MACD, Bollinger Bands
-- **Dòng tiền thông minh**: BU-SD, NĐTNN realtime
+- **Realtime data** from HOSE, HNX, UPCOM via WebSocket
+- **Historical data** full timeframe 1m, 5m, 15m, 1h, 4h, 1D
+- **Financial reports** by year, quarter, consolidated/separate
+- **Technical indicators**: MA, EMA, RSI, MACD, Bollinger Bands
+- **Smart money flow**: BU-SD, Foreign investor (NĐTNN) realtime
 
 ## Quick Start
 
