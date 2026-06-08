@@ -11,7 +11,7 @@ curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/hea
 Or read the guide and follow manually:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/FIRST_INSTALL.md
+curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
 ```
 
 ## What is FiinQuantX?
@@ -35,7 +35,7 @@ client = FiinSession(
 
 ## Documentation
 
-See [FIRST_INSTALL.md](./FIRST_INSTALL.md) for detailed setup instructions.
+See [skills/fiinquant/FIRST_INSTALL.md](./skills/fiinquant/FIRST_INSTALL.md) for detailed setup instructions.
 
 ## License
 
