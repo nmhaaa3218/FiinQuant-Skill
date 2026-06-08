@@ -1,4 +1,4 @@
-# FiinQuant Skill for OpenCode
+# FiinQuant Skill for Agents
 
 Thư viện dữ liệu tài chính Python cho thị trường chứng khoán Việt Nam.
 
