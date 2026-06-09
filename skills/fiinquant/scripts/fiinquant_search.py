@@ -32,13 +32,20 @@ def robust_get(url: str, params: dict = None, headers: dict = None, timeout: int
     for attempt in range(3):
         try:
             response = requests.get(url, params=params, headers=headers, timeout=timeout)
+            # Handle rate limiting (429) dynamically
+            if response.status_code == 429:
+                retry_after = int(response.headers.get("Retry-After", 3))
+                time.sleep(retry_after)
+                raise requests.RequestException("Rate limited (429)")
             # Retry on transient server errors (500, 502, 503, 504)
             if response.status_code in [500, 502, 503, 504]:
                 raise requests.RequestException(f"Server error {response.status_code}")
             return response
         except Exception as e:
             last_err = e
-            if attempt < 2:
+            # Avoid duplicate backoff sleep if we already slept for 429 Retry-After
+            is_429 = isinstance(e, requests.RequestException) and "429" in str(e)
+            if attempt < 2 and not is_429:
                 time.sleep(1 + attempt)  # Backoff: 1s, 2s
     raise last_err
 

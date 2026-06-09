@@ -1,6 +1,6 @@
 {
   "name": "fiinquant-skill",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Installer CLI for the FiinQuant Vietnamese stock market financial data skill.",
   "main": "bin/cli.js",
   "bin": {

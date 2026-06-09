@@ -42,47 +42,47 @@ Dựa trên câu hỏi của người dùng, hãy xác định **Nhóm Intent** 
 
 ### Nhóm 1 — Danh mục & Thông tin cơ bản
 * **Ý định (Intent):** Tra cứu danh sách mã, thông tin doanh nghiệp, vốn hóa, room ngoại, freefloat, giá trần/sàn.
-* **Từ khóa chính:** `danh sách mã`, `VN30`, `HNX30`, `rổ chỉ số`, `VNINDEX`, `ngành ICB`, `vốn hóa`, `room ngoại`, `NĐTNN`, `freefloat`, `giá trần sàn`, `tên công ty`, `hồ sơ công ty`.
+* **Từ khóa chính:** `danh sách mã`, `VN30`, `HNX30`, `rổ chỉ số`, `VNINDEX`, `ngành ICB`, `vốn hóa`, `room ngoại`, `NĐTNN`, `freefloat`, `giá trần sàn`, `tên công ty`, `hồ sơ công ty`, `ticker list`, `index bucket`, `market cap`, `foreign room`, `company profile`, `stock info`.
 * **Tra cứu từ khóa:** `Danh mục & Thông tin cơ bản` hoặc `danh sach ma`.
 
 ### Nhóm 2 — Dữ liệu giao dịch
 * **Ý định (Intent):** Lấy giá realtime, giá lịch sử (OHLCV), sổ lệnh bid/ask, dữ liệu tick-by-tick.
-* **Từ khóa chính:** `giá hiện tại`, `giá realtime`, `giá lịch sử`, `quá khứ`, `OHLCV`, `nến`, `timeframe`, `sổ lệnh`, `orderbook`, `bước giá`, `hủy lệnh`, `tick data`.
+* **Từ khóa chính:** `giá hiện tại`, `giá realtime`, `giá lịch sử`, `quá khứ`, `OHLCV`, `nến`, `timeframe`, `sổ lệnh`, `orderbook`, `bước giá`, `hủy lệnh`, `tick data`, `live price`, `historical price`, `order book`, `tick-by-tick`.
 * **Tra cứu từ khóa:** `Dữ liệu giao dịch` hoặc `du lieu lich su`.
 
 ### Nhóm 3 — Phân tích cơ bản & Định giá (FA)
 * **Ý định (Intent):** Lọc/đọc Báo cáo tài chính (BCTC), chỉ số tài chính (ROE, ROA, EPS...), định giá P/E, P/B, EV/EBITDA.
-* **Từ khóa chính:** `báo cáo tài chính`, `BCTC`, `cân đối kế toán`, `kết quả kinh doanh`, `lưu chuyển tiền tệ`, `ROE`, `ROA`, `EPS`, `P/E`, `P/B`, `định giá`.
+* **Từ khóa chính:** `báo cáo tài chính`, `BCTC`, `cân đối kế toán`, `kết quả kinh doanh`, `lưu chuyển tiền tệ`, `ROE`, `ROA`, `EPS`, `P/E`, `P/B`, `định giá`, `financial reports`, `balance sheet`, `income statement`, `cash flow`, `valuation`.
 * **Tra cứu từ khóa:** `Phân tích cơ bản & Định giá` hoặc `bao cao tai chinh`.
 
 ### Nhóm 4 — Thống kê thị trường
 * **Ý định (Intent):** Độ rộng thị trường (mã tăng/giảm), seasonality (mùa vụ giá).
-* **Từ khóa chính:** `độ rộng thị trường`, `số mã tăng giảm`, `advance decline`, `seasonality`, `biến động theo tháng/quý`.
+* **Từ khóa chính:** `độ rộng thị trường`, `số mã tăng giảm`, `advance decline`, `seasonality`, `biến động theo tháng/quý`, `market breadth`, `advance-decline ratio`, `seasonality analysis`.
 * **Tra cứu từ khóa:** `Thống kê thị trường`.
 
 ### Nhóm 5 — Chiến lược & Công cụ
 * **Ý định (Intent):** Rebalance danh mục, tối ưu hóa danh mục (Markowitz), biểu đồ sức mạnh giá RRG.
-* **Từ khóa chính:** `rebalance`, `tái cơ cấu`, `phân bổ lại`, `tối ưu danh mục`, `RRG`, `sức mạnh giá`.
+* **Từ khóa chính:** `rebalance`, `tái cơ cấu`, `phân bổ lại`, `tối ưu danh mục`, `RRG`, `sức mạnh giá`, `portfolio optimization`, `relative rotation graph`, `price strength`.
 * **Tra cứu từ khóa:** `Chiến lược & công cụ`.
 
 ### Nhóm 6 — Đặt lệnh giao dịch
 * **Ý định (Intent):** Đăng nhập công ty chứng khoán, kiểm tra số dư tài khoản, sức mua, đặt/sửa/hủy lệnh mua/bán, xem vị thế đang giữ.
-* **Từ khóa chính:** `kết nối DNSE`, `số dư tài khoản`, `margin`, `sức mua`, `đặt lệnh mua`, `đặt lệnh bán`, `sửa lệnh`, `hủy lệnh`, `vị thế`, `đóng deal`.
+* **Từ khóa chính:** `kết nối DNSE`, `số dư tài khoản`, `margin`, `sức mua`, `đặt lệnh mua`, `đặt lệnh bán`, `sửa lệnh`, `hủy lệnh`, `vị thế`, `đóng deal`, `broker connection`, `account balance`, `buying power`, `place buy order`, `place sell order`, `cancel order`, `portfolio positions`.
 * **Tra cứu từ khóa:** `Hàm Đặt Lệnh` hoặc `dat lenh`.
 
 ### Nhóm 7 — Chỉ báo kỹ thuật (TA)
 * **Ý định (Intent):** Chỉ báo xu hướng (MA, EMA...), động lượng (RSI, MACD...), biến động (Bollinger Bands, ATR...), khối lượng (OBV, VWAP...), hỗ trợ/kháng cự, Fibonacci, Smart Money Concepts (SMC, FVG, BOS, CHoCH).
-* **Từ khóa chính:** `MA`, `EMA`, `RSI`, `MACD`, `Bollinger Bands`, `OBV`, `chỉ báo dòng tiền`, `hỗ trợ kháng cự`, `fibonacci`, `fibo`, `SMC`, `order block`, `FVG`.
+* **Từ khóa chính:** `MA`, `EMA`, `RSI`, `MACD`, `Bollinger Bands`, `OBV`, `chỉ báo dòng tiền`, `hỗ trợ kháng cự`, `fibonacci`, `fibo`, `SMC`, `order block`, `FVG`, `technical indicators`, `support resistance`, `smart money concepts`.
 * **Tra cứu từ khóa:** `Danh sách chỉ số TA`.
 
 ### Nhóm 8 — Mô hình biểu đồ (Chart Patterns)
 * **Ý định (Intent):** Nhận dạng mô hình nến đảo chiều/tiếp diễn, cốc tay cầm, vai đầu vai...
-* **Từ khóa chính:** `mô hình nến`, `candlestick`, `vai đầu vai`, `cốc tay cầm`, `hai đỉnh`, `hai đáy`, `engulfing`.
+* **Từ khóa chính:** `mô hình nến`, `candlestick`, `vai đầu vai`, `cốc tay cầm`, `hai đỉnh`, `hai đáy`, `engulfing`, `chart patterns`, `head and shoulders`, `cup and handle`, `double top`, `double bottom`.
 * **Tra cứu từ khóa:** `Danh sách mô hình Pattern`.
 
 ### Nhóm 9 — Bộ lọc cổ phiếu (Stock Screening)
 * **Ý định (Intent):** Tìm các cổ phiếu thỏa mãn tiêu chí tài chính/kỹ thuật.
-* **Từ khóa chính:** `lọc cổ phiếu`, `tìm cổ phiếu`, `screen`, `screener`, `CP có PE <`.
+* **Từ khóa chính:** `lọc cổ phiếu`, `tìm cổ phiếu`, `screen`, `screener`, `CP có PE <`, `stock filter`, `stock screening`, `scan stocks`.
 * **Tra cứu từ khóa:** `Bộ lọc cổ phiếu`.
 
 ---
