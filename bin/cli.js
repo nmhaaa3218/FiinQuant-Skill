@@ -149,6 +149,11 @@ if (!success) {
   runPip('python3 -m pip uninstall signalrcore -y --break-system-packages 2>/dev/null || true');
   runPip('python3 -m pip install "signalrcore>=0.9,<1.0" --user --break-system-packages');
   printSuccess('signalrcore version downgraded.');
+  
+  // Install matplotlib (required internally by fiinquantx but missing from its dependencies)
+  console.log('  Installing matplotlib...');
+  runPip('python3 -m pip install matplotlib --user --break-system-packages');
+  printSuccess('matplotlib installed.');
 }
 
 // Step 2: Deploy Skill Files
