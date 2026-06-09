@@ -275,7 +275,9 @@ def main():
             results = search_documents(query)
             print_search_results(results)
     else:
-        run_tests()
+        success = run_tests()
+        if not success:
+            sys.exit(1)
 
 
 if __name__ == "__main__":
