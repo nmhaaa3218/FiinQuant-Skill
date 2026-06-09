@@ -42,11 +42,28 @@ FIIN_PASSWORD=your_password
 
 ### Step 3: Verify the Setup (Sanity Check)
 
-To verify that the installation succeeded and the credentials are valid, run the root-level quickstart script:
-```bash
-python3 quickstart.py
+To verify that the installation succeeded and the credentials are valid, run this Python script:
+
+```python
+import os
+from dotenv import load_dotenv
+from FiinQuantX import FiinSession
+
+# Load credentials from .env
+load_dotenv()
+username = os.environ.get("FIIN_USERNAME")
+password = os.environ.get("FIIN_PASSWORD")
+
+if not username or not password:
+    print("Error: FIIN_USERNAME or FIIN_PASSWORD not found in environment/.env file.")
+else:
+    try:
+        client = FiinSession(username=username, password=password).login()
+        print("Login successful! VN30 Tickers:")
+        print(client.TickerList(ticker="VN30"))
+    except Exception as e:
+        print(f"Login or request failed: {e}")
 ```
-Upon success, this script will log in to the FiinQuant server and print the list of stock tickers in the VN30 index.
 
 ---
 

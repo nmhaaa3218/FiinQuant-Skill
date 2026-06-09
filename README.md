@@ -48,11 +48,28 @@ FIIN_PASSWORD=your_password
 
 ### Step 3: Verify the Setup (Sanity Check)
 
-To verify that your library installation and credentials work, run:
-```bash
-python3 quickstart.py
+To verify that your library installation and credentials work, you (or your agent) can run this Python script:
+
+```python
+import os
+from dotenv import load_dotenv
+from FiinQuantX import FiinSession
+
+# Load credentials from .env
+load_dotenv()
+username = os.environ.get("FIIN_USERNAME")
+password = os.environ.get("FIIN_PASSWORD")
+
+if not username or not password:
+    print("Error: FIIN_USERNAME or FIIN_PASSWORD not found in environment/.env file.")
+else:
+    try:
+        client = FiinSession(username=username, password=password).login()
+        print("Login successful! VN30 Tickers:")
+        print(client.TickerList(ticker="VN30"))
+    except Exception as e:
+        print(f"Login or request failed: {e}")
 ```
-If setup successfully, it will authenticate with FiinQuant and print the VN30 stock tickers.
 
 ### Step 4: Register the Skill as a Native MCP Server
 
