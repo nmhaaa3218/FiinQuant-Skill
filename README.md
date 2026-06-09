@@ -36,7 +36,7 @@ Fetch the full guide and follow it step by step:
 curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
 ```
 
-The guide covers: installing the FiinQuantX library from the custom index, downgrading signalrcore to a compatible version (0.9.x), credentials configuration in `.env`, validating the login using `quickstart.py`, and registering the Model Context Protocol (MCP) server. Don't summarize it; read it end to end.
+The guide covers: installing the FiinQuantX library from the custom index, downgrading signalrcore to a compatible version (0.9.x), credentials configuration in `.env`, validating the login using a test script, and registering the Model Context Protocol (MCP) server. Don't summarize it; read it end to end.
 
 ---
 
@@ -97,14 +97,14 @@ else:
 
 Expose the documentation search tool as a native capability to your coding assistant by configuring it as a Model Context Protocol (MCP) server. 
 
-Add the following to your agent harness configuration (e.g., Cursor MCP Settings, `claude_desktop_config.json`, or the system settings):
+Add the following to your agent harness configuration (pointing to the script in your local deployed directory, e.g., `./.agents/skills/fiinquant` or `./.claude/skills/fiinquant`):
 
 ```json
 "mcpServers": {
   "fiinquant-docs": {
     "command": "python3",
     "args": [
-      "<absolute_path_to_this_repository>/skills/fiinquant/scripts/fiinquant_search.py",
+      "<absolute_path_to_project_root>/.agents/skills/fiinquant/scripts/fiinquant_search.py",
       "--mcp"
     ]
   }
