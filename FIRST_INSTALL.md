@@ -158,3 +158,7 @@ Once installed, the agent or user can search the documentation using standalone 
    ```bash
    python3 scripts/fiinquant_search.py --corpus
    ```
+5. **Show help menu**:
+   ```bash
+   python3 scripts/fiinquant_search.py --help
+   ```
