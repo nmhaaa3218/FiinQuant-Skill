@@ -36,7 +36,7 @@ Fetch the full guide and follow it step by step:
 curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
 ```
 
-The guide covers: installing the FiinQuantX library from the custom index, downgrading signalrcore to a compatible version (0.9.x), credentials configuration in `.env`, validating the login using a test script, and registering the Model Context Protocol (MCP) server. Don't summarize it; read it end to end.
+The guide covers: installing the FiinQuantX library from the custom index, downgrading signalrcore to a compatible version (0.9.x), credentials configuration in `.env`, validating the login using a test script, and registering the skill configuration. Don't summarize it; read it end to end.
 
 ---
 
@@ -61,7 +61,7 @@ pip uninstall signalrcore -y && pip install "signalrcore>=0.9,<1.0"
 
 ### Step 2: Configure Credentials
 
-Create a `.env` file at the root of the workspace (or inside [skills/fiinquant/](file:///Users/manhhanguyen/Downloads/test/skills/fiinquant/)) containing your FiinQuant credentials:
+Create a `.env` file at the root of the workspace (or inside [skills/fiinquant/](skills/fiinquant/)) containing your FiinQuant credentials:
 ```env
 FIIN_USERNAME=your_username
 FIIN_PASSWORD=your_password
@@ -93,35 +93,42 @@ else:
         print(f"Login or request failed: {e}")
 ```
 
-### Step 4: Register the Skill as a Native MCP Server
+### Step 4: Register the Skill in your Agent Config
 
-Expose the documentation search tool as a native capability to your coding assistant by configuring it as a Model Context Protocol (MCP) server. 
+Configure your agent system to load the skill from the deployed location.
 
-Add the following to your agent harness configuration (pointing to the script in your local deployed directory, e.g., `./.agents/skills/fiinquant` or `./.claude/skills/fiinquant`):
+For example, update your local config file (e.g., `./.agents/config.json` or `./.agents/opencode.json`) by adding the deployed skill path:
 
 ```json
-"mcpServers": {
-  "fiinquant-docs": {
-    "command": "python3",
-    "args": [
-      "<absolute_path_to_project_root>/.agents/skills/fiinquant/scripts/fiinquant_search.py",
-      "--mcp"
-    ]
-  }
+{
+  "skills": [
+    {
+      "name": "fiinquant",
+      "location": "<absolute_path_to_project_root>/.agents/skills/fiinquant"
+    }
+  ]
 }
 ```
 
 ---
 
-## 🤖 Available MCP Tools
+## 🤖 Available Documentation CLI Commands
 
-Once loaded as a skill or MCP server, the following tools will be available to the agent:
+Once installed, the agent or user can search the documentation using standalone CLI flags:
 
-1. **`search_documents`**: Search the live FiinQuant documentation for functions, APIs, or real-time setup guides.
-   - Arguments: `query` (string), `limit` (integer, optional)
-2. **`get_document_outline`**: Fetch the complete documentation outline / sitemap.
-   - Arguments: None
-3. **`read_document_page`**: Extract the full markdown content of a specific documentation page.
-   - Arguments: `path` (string)
-4. **`get_full_corpus`**: Retrieve the entire documentation corpus in one text file (useful for offline reasoning).
-   - Arguments: None
+1. **Search documents**:
+   ```bash
+   python3 scripts/fiinquant_search.py "WebSocket realtime"
+   ```
+2. **Read a specific page**:
+   ```bash
+   python3 scripts/fiinquant_search.py --read "/ham-va-cong-thuc/2.-du-lieu-giao-dich/2.1.-ham-du-lieu-realtime.md"
+   ```
+3. **Get sitemap/outline**:
+   ```bash
+   python3 scripts/fiinquant_search.py --outline
+   ```
+4. **Get entire documentation corpus**:
+   ```bash
+   python3 scripts/fiinquant_search.py --corpus
+   ```

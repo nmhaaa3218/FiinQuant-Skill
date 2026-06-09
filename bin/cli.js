@@ -165,82 +165,10 @@ if (options.username && options.password) {
   printSuccess('No credentials provided. Skipping .env creation.');
 }
 
-// Step 4: Register Skill/MCP Server in Agent Harnesses
-console.log('\n[4/4] Registering MCP Server with Host Systems...');
+// Step 4: Register Skill in Agent Harnesses
+console.log('\n[4/4] Registering Skill with Host Systems...');
 
-const mcpScriptPath = path.join(skillDestPath, 'scripts', 'fiinquant_search.py');
-
-// Register Cursor
-if (options.cursor) {
-  let settingsPath = '';
-  if (process.platform === 'darwin') {
-    settingsPath = expandHome('~/Library/Application Support/Cursor/User/settings.json');
-  } else if (process.platform === 'win32') {
-    settingsPath = path.join(process.env.APPDATA || '', 'Cursor', 'User', 'settings.json');
-  } else {
-    settingsPath = expandHome('~/.config/Cursor/User/settings.json');
-  }
-
-  console.log(`  Registering with Cursor settings at: ${settingsPath}`);
-  try {
-    let settings = {};
-    if (fs.existsSync(settingsPath)) {
-      settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-    } else {
-      fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
-    }
-
-    if (!settings['mcp.multiModeServers']) {
-      settings['mcp.multiModeServers'] = {};
-    }
-
-    settings['mcp.multiModeServers']['fiinquant-docs'] = {
-      type: 'stdio',
-      command: 'python3',
-      args: [mcpScriptPath, '--mcp'],
-      enabled: true
-    };
-
-    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2), 'utf8');
-    printSuccess('Registered with Cursor MCP servers successfully.');
-  } catch (e) {
-    printWarning(`Failed to register with Cursor: ${e.message}`);
-  }
-}
-
-// Register Claude Desktop
-if (options.claude) {
-  let claudePath = '';
-  if (process.platform === 'darwin') {
-    claudePath = expandHome('~/Library/Application Support/Claude/claude_desktop_config.json');
-  } else {
-    claudePath = path.join(process.env.APPDATA || '', 'Claude', 'claude_desktop_config.json');
-  }
-
-  console.log(`  Registering with Claude Desktop config at: ${claudePath}`);
-  try {
-    let config = {};
-    if (fs.existsSync(claudePath)) {
-      config = JSON.parse(fs.readFileSync(claudePath, 'utf8'));
-    } else {
-      fs.mkdirSync(path.dirname(claudePath), { recursive: true });
-    }
-
-    if (!config.mcpServers) {
-      config.mcpServers = {};
-    }
-
-    config.mcpServers['fiinquant-docs'] = {
-      command: 'python3',
-      args: [mcpScriptPath, '--mcp']
-    };
-
-    fs.writeFileSync(claudePath, JSON.stringify(config, null, 2), 'utf8');
-    printSuccess('Registered with Claude Desktop config successfully.');
-  } catch (e) {
-    printWarning(`Failed to register with Claude: ${e.message}`);
-  }
-}
+const searchScriptPath = path.join(skillDestPath, 'scripts', 'fiinquant_search.py');
 
 // Register Antigravity
 if (options.antigravity || options.agy) {
@@ -306,5 +234,5 @@ console.log('  Installation Complete!');
 console.log('============================================================');
 console.log(`\nSkill has been set up successfully at: ${skillDestPath}`);
 console.log(`You can search the docs using:`);
-console.log(`  python3 ${mcpScriptPath} "WebSocket realtime"`);
+console.log(`  python3 ${searchScriptPath} "WebSocket realtime"`);
 console.log(`\nRestart your agent and ask: 'I want to use the fiinquant skill' to start coding!`);
