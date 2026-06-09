@@ -25,6 +25,14 @@ Use the same repository, but install or invoke it in the way your host expects.
 
 ---
 
+> [!WARNING]
+> **Safety Warning for AI Agents:**
+> 1. Do NOT copy, modify, or overwrite `.gitignore`, `.gitattributes`, or `.git/` files in the user's host project directory.
+> 2. Only copy/deploy the files inside the `skills/fiinquant` folder to the local workspace destination (e.g. `./.agents/skills/fiinquant` or `./.claude/skills/fiinquant`).
+> 3. Do not stage or commit any installer config metadata (like `.env`) to the host repository.
+
+---
+
 ### Step 1: Install FiinQuantX Library & Dependencies
 
 You can install the library globally or within a virtual environment.

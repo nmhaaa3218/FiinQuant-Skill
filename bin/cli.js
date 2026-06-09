@@ -80,16 +80,21 @@ for (let i = 0; i < args.length; i++) {
   }
 }
 
-// Determine destination directory
-let skillDestPath = expandHome('~/.skills/fiinquant');
+// Determine destination directory based on target host (local path of that folder instead of global)
+let skillDestPath = path.resolve(process.cwd(), '.agents/skills/fiinquant'); // default fallback
+
 if (options.customPath) {
-  skillDestPath = path.resolve(expandHome(options.customPath));
+  skillDestPath = path.resolve(process.cwd(), expandHome(options.customPath));
+} else if (options.claude) {
+  skillDestPath = path.resolve(process.cwd(), '.claude/skills/fiinquant');
+} else if (options.cursor) {
+  skillDestPath = path.resolve(process.cwd(), '.cursor/skills/fiinquant');
 } else if (options.kiro) {
-  skillDestPath = expandHome('~/.kiro/skills/fiinquant');
+  skillDestPath = path.resolve(process.cwd(), '.kiro/skills/fiinquant');
 } else if (options.adal) {
-  skillDestPath = path.resolve(expandHome('.adal/skills/fiinquant'));
-} else if (options.opencode) {
-  skillDestPath = path.resolve(expandHome('.agents/skills/fiinquant'));
+  skillDestPath = path.resolve(process.cwd(), '.adal/skills/fiinquant');
+} else if (options.opencode || options.antigravity || options.agy || options.gemini || options.codex) {
+  skillDestPath = path.resolve(process.cwd(), '.agents/skills/fiinquant');
 }
 
 printHeader('FiinQuant Skill NPM Installer');
@@ -239,7 +244,7 @@ if (options.claude) {
 
 // Register Antigravity
 if (options.antigravity || options.agy) {
-  const agPath = expandHome('~/.config/antigravity/config.json');
+  const agPath = path.resolve(process.cwd(), '.agents/config.json');
   console.log(`  Registering with Antigravity config at: ${agPath}`);
   try {
     let config = {};
@@ -269,7 +274,7 @@ if (options.antigravity || options.agy) {
 
 // Register OpenCode
 if (options.opencode) {
-  const opPath = expandHome('~/.config/opencode/opencode.json');
+  const opPath = path.resolve(process.cwd(), '.agents/opencode.json');
   console.log(`  Registering with OpenCode config at: ${opPath}`);
   try {
     let config = {};

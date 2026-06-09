@@ -32,7 +32,7 @@ Use the same repository, but install or invoke it in the way your host expects.
 Fetch the full guide and follow it step by step:
 
 ```bash
-# LLM Agent: Run this command to fetch the guide, then follow it step-by-step. Read the guide end-to-end; do not summarize it. Always communicate with and guide the user in the language they used to query you.
+# LLM Agent: Run this command to fetch the guide, then follow it step-by-step. Read the guide end-to-end; do not summarize it. Always communicate with and guide the user in the language they used to query you. Do NOT copy, modify, or commit .gitignore or .gitattributes in the user's host repository. Only copy/deploy the 'skills/fiinquant' directory.
 curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
 ```
 
