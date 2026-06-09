@@ -15,6 +15,7 @@ import requests
 import re
 import json
 import sys
+import time
 from typing import List, Dict
 
 BASE_URL = "https://docs.fiinquant.vn"
@@ -25,6 +26,23 @@ HEADERS = {
 TIMEOUT = 30
 
 
+def robust_get(url: str, params: dict = None, headers: dict = None, timeout: int = 30) -> requests.Response:
+    """Make an HTTP GET request with simple retry logic and backoff using time.sleep."""
+    last_err = None
+    for attempt in range(3):
+        try:
+            response = requests.get(url, params=params, headers=headers, timeout=timeout)
+            # Retry on transient server errors (500, 502, 503, 504)
+            if response.status_code in [500, 502, 503, 504]:
+                raise requests.RequestException(f"Server error {response.status_code}")
+            return response
+        except Exception as e:
+            last_err = e
+            if attempt < 2:
+                time.sleep(1 + attempt)  # Backoff: 1s, 2s
+    raise last_err
+
+
 def search_documents(
     query: str,
     limit: int = 10,
@@ -32,6 +50,7 @@ def search_documents(
 ) -> List[Dict[str, str]]:
     """
     Search FiinQuant documentation using the built-in ask endpoint.
+    Falls back to a local title-keyword search on the sitemap if the endpoint fails or returns no results.
 
     Args:
         query: Natural language search query (e.g., "WebSocket realtime", "Fetch_Trading_Data")
@@ -43,19 +62,61 @@ def search_documents(
     """
     url = f"{BASE_URL}{base_page}"
     params = {"ask": query}
+    results = []
 
-    response = requests.get(url, params=params, headers=HEADERS, timeout=TIMEOUT)
-    response.raise_for_status()
+    try:
+        response = robust_get(url, params=params, headers=HEADERS, timeout=TIMEOUT)
+        response.raise_for_status()
+        results = _parse_search_results(response.text, limit)
+    except Exception as e:
+        print(f"Warning: Remote search failed ({e}). Trying local fallback search...", file=sys.stderr)
 
-    content = response.text
-    return _parse_search_results(content, limit)
+    if not results:
+        results = fallback_local_search(query, limit)
+
+    return results
+
+
+def fallback_local_search(query: str, limit: int = 10) -> List[Dict[str, str]]:
+    """
+    Perform a robust local keyword search over the sitemap
+    when the remote search fails or returns nothing.
+    """
+    results = []
+    try:
+        outline = get_document_outline()
+        query_words = [w.lower().strip() for w in query.split() if w.strip()]
+        if not query_words:
+            return results
+
+        for section, pages in outline.items():
+            for page in pages:
+                title = page["title"].lower()
+                path = page["path"].lower()
+                # Matches if all words in search query are found in title or path
+                if all(word in title or word in path for word in query_words):
+                    if page["path"] not in [r["path"] for r in results]:
+                        results.append({
+                            "title": page["title"],
+                            "path": page["path"],
+                            "url": page["url"],
+                            "snippet": f"Section: {section}"
+                        })
+                        if len(results) >= limit:
+                            return results
+    except Exception as e:
+        print(f"Warning: Fallback local search failed ({e})", file=sys.stderr)
+    return results
 
 
 def _parse_search_results(content: str, limit: int) -> List[Dict[str, str]]:
-    """Parse search results from ask endpoint response."""
+    """Parse search results from ask endpoint response using a robust regex."""
     results = []
     lines = content.split("\n")
     in_sources = False
+
+    # Regex matching: - [Title](https://docs.fiinquant.vn/path) or - [Title](/path) or - [Title](../path)
+    link_pattern = re.compile(r'-\s+\[([^\]]+)\]\(((?:https?://[a-zA-Z0-9.-]+)?(/[^)]+))\)')
 
     for line in lines:
         if line.startswith("## Sources:") or line.startswith("# Sources:"):
@@ -63,7 +124,7 @@ def _parse_search_results(content: str, limit: int) -> List[Dict[str, str]]:
             continue
 
         if in_sources and line.strip().startswith("- ["):
-            match = re.match(r'- \[(.+?)\]\((https://docs\.fiinquant\.vn(.+?))\)', line)
+            match = link_pattern.search(line)
             if match:
                 title = match.group(1)
                 path = match.group(3)
@@ -81,9 +142,9 @@ def _parse_search_results(content: str, limit: int) -> List[Dict[str, str]]:
     return results
 
 
-def get_document_outline() -> Dict[str, List[str]]:
+def get_document_outline() -> Dict[str, List[Dict[str, str]]]:
     """Get the full documentation sitemap organized by category."""
-    response = requests.get(f"{BASE_URL}/sitemap.md", headers=HEADERS, timeout=TIMEOUT)
+    response = robust_get(f"{BASE_URL}/sitemap.md", headers=HEADERS, timeout=TIMEOUT)
     response.raise_for_status()
 
     content = response.text
@@ -91,9 +152,12 @@ def get_document_outline() -> Dict[str, List[str]]:
 
 
 def _parse_sitemap(content: str) -> Dict[str, List[Dict[str, str]]]:
-    """Parse sitemap markdown into structured data."""
+    """Parse sitemap markdown into structured data using a robust regex."""
     sections = {}
     current_section = "General"
+
+    # Regex matching sitemap links (accepts both absolute and relative)
+    link_pattern = re.compile(r'-\s+\[([^\]]+)\]\(((?:https?://[a-zA-Z0-9.-]+)?(/[^)]+))\)')
 
     lines = content.split("\n")
     for line in lines:
@@ -110,7 +174,7 @@ def _parse_sitemap(content: str) -> Dict[str, List[Dict[str, str]]]:
                 sections[current_section] = []
             continue
 
-        match = re.match(r'- \[(.+?)\]\((https://docs\.fiinquant\.vn(.+?))\)', line)
+        match = link_pattern.search(line)
         if match:
             title = match.group(1)
             path = match.group(3)
@@ -134,14 +198,14 @@ def read_document_page(path: str) -> str:
         Page content in markdown format
     """
     url = f"{BASE_URL}{path}"
-    response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+    response = robust_get(url, headers=HEADERS, timeout=TIMEOUT)
     response.raise_for_status()
     return response.text
 
 
 def get_full_corpus() -> str:
     """Retrieve the full documentation corpus as a single text file."""
-    response = requests.get(f"{BASE_URL}/llms-full.txt", headers=HEADERS, timeout=60)
+    response = robust_get(f"{BASE_URL}/llms-full.txt", headers=HEADERS, timeout=60)
     response.raise_for_status()
     return response.text
 
