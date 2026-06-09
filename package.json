@@ -1,0 +1,21 @@
+{
+  "name": "fiinquant-skill",
+  "version": "1.0.0",
+  "description": "Installer CLI for the FiinQuant Vietnamese stock market financial data skill.",
+  "main": "bin/cli.js",
+  "bin": {
+    "fiinquant-skill": "./bin/cli.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "fiinquant",
+    "mcp",
+    "agent",
+    "skill",
+    "vietnam"
+  ],
+  "author": "nmhaaa3218",
+  "license": "MIT"
+}

@@ -6,6 +6,27 @@ This repository is designed to be fully self-installable by AI agents (like Curs
 
 ---
 
+## Choose Your Tool
+
+Use the same repository, but install or invoke it in the way your host expects.
+
+| Tool | Install | First Use |
+| :--- | :--- | :--- |
+| **Claude Code** | `npx github:nmhaaa3218/FiinQuant-Skill --claude` | `>> ask the fiinquant-docs skill for market overview` |
+| **Cursor** | `npx github:nmhaaa3218/FiinQuant-Skill --cursor` | `@fiinquant-docs help me fetch historical data` |
+| **Gemini CLI** | `npx github:nmhaaa3218/FiinQuant-Skill --gemini` | `Use fiinquant-docs to search docs` |
+| **Codex CLI** | `npx github:nmhaaa3218/FiinQuant-Skill --codex` | `Use fiinquant-docs to search docs` |
+| **Antigravity IDE** | `npx github:nmhaaa3218/FiinQuant-Skill --antigravity` | `Use @fiinquant-docs to fetch data` |
+| **Antigravity CLI (agy)** | `npx github:nmhaaa3218/FiinQuant-Skill --agy` | `/fiinquant-docs get VN30 tickers` |
+| **Kiro CLI** | `npx github:nmhaaa3218/FiinQuant-Skill --kiro` | `Use fiinquant-docs to search docs` |
+| **Kiro IDE** | `npx github:nmhaaa3218/FiinQuant-Skill --path ~/.kiro/skills` | `Use @fiinquant-docs to search docs` |
+| **GitHub Copilot** | *No installer — paste skills or rules manually* | `Ask Copilot to write fiinquantx code` |
+| **OpenCode** | `npx github:nmhaaa3218/FiinQuant-Skill --opencode` | `opencode run @fiinquant-docs help me plan` |
+| **AdaL CLI** | `npx github:nmhaaa3218/FiinQuant-Skill --adal` | `Use fiinquant-docs to search docs` |
+| **Custom path** | `npx github:nmhaaa3218/FiinQuant-Skill --path ./my-skills` | *Depends on your tool* |
+
+---
+
 ## For LLM Agents
 
 Fetch the full guide and follow it step by step:
