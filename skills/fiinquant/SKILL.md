@@ -38,7 +38,7 @@ Dựa trên câu hỏi của người dùng, hãy xác định **Nhóm Intent** 
 ### Nhóm 0 — Cài đặt & Giới thiệu
 * **Ý định (Intent):** Hỏi về cài đặt, import, login, lỗi cài đặt, giới thiệu tổng quan.
 * **Từ khóa chính:** `cài đặt`, `install`, `pip`, `setup`, `import`, `đăng nhập`, `login`, `lỗi import`, `NameError`.
-* **Trang cần đọc:** Xem [README.md](../../README.md) hoặc [FIRST_INSTALL.md](./FIRST_INSTALL.md).
+* **Tra cứu tài liệu:** Chạy CLI search script hoặc xem hướng dẫn trực tuyến tại [GitHub README](https://github.com/nmhaaa3218/FiinQuant-Skill/blob/main/README.md) và [FIRST_INSTALL Guide](https://github.com/nmhaaa3218/FiinQuant-Skill/blob/main/FIRST_INSTALL.md).
 
 ### Nhóm 1 — Danh mục & Thông tin cơ bản
 * **Ý định (Intent):** Tra cứu danh sách mã, thông tin doanh nghiệp, vốn hóa, room ngoại, freefloat, giá trần/sàn.

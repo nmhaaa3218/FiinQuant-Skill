@@ -6,7 +6,13 @@ This guide describes how to configure the FiinQuant skill, manage library depend
 
 ## ⚡ Option 1: 1-Line Automated Installation (Recommended)
 
-You can automatically install the FiinQuant skill directly using our Node.js/NPM command-line installer. This is the easiest and most reliable method for both humans and AI agents.
+> [!IMPORTANT]
+> **AI Agent Instructions — Account & Credentials Check:**
+> Before running any installation command or proceeding with setup, the AI agent **MUST** ask the user if they already have a FiinQuant account:
+> 1. **If they have an account:** Ask if they would like to provide their username and password now. If they do, you can run the `npx` command with `--username TÀI_KHOẢN --password MẬT_KHẨU` so the installer automatically configures credentials.
+> 2. **If they do not have an account:** Inform them they can sign up at [fiinquant.vn](https://fiinquant.vn). Explain that they can also proceed with a lean installation without credentials now and configure them later.
+>
+> You can automatically install the FiinQuant skill directly using our Node.js/NPM command-line installer. This is the easiest and most reliable method for both humans and AI agents.
 
 Select the command corresponding to your agent harness/environment:
 
@@ -23,17 +29,10 @@ Select the command corresponding to your agent harness/environment:
 | **OpenCode** | `npx github:nmhaaa3218/FiinQuant-Skill --opencode` |
 | **AdaL CLI** | `npx github:nmhaaa3218/FiinQuant-Skill --adal` |
 
-### Passing Credentials During Installation
-To make it even simpler, you can pass your FiinQuant username and password as parameters to the command. This will automatically create the `.env` file in the correct deployed location:
-```bash
-npx github:nmhaaa3218/FiinQuant-Skill --claude --username YOUR_USERNAME --password YOUR_PASSWORD
-```
-*(Or specify the credentials via environment variables `FIIN_USERNAME` and `FIIN_PASSWORD` before running the command).*
-
 ### What the 1-Line Installer Does:
 1. **Installs/Patches dependencies**: Automatically installs `fiinquantx` from the custom index and ensures `signalrcore` is downgraded to a compatible version `< 1.0.0` (handling PEP 668 environment blocks automatically).
 2. **Deploys skill files locally**: Copies only the `skills/fiinquant` folder structure to the correct project-local directory (e.g. `./.claude/skills/fiinquant` or `./.agents/skills/fiinquant`), keeping your repository root clean.
-3. **Creates local credentials file**: Automatically writes your credentials into a local `.env` inside the deployed directory.
+3. **Prepares the local workspace**: Sets up the folder structure so you can add your credentials in `.env` later.
 4. **Registers the skill**: Safely updates your local agent config (`.agents/config.json` or `.agents/opencode.json`) with the absolute path to the deployed skill.
 
 ---

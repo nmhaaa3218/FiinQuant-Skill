@@ -71,7 +71,26 @@ for (let i = 0; i < args.length; i++) {
   else if (arg === '--kiro') options.kiro = true;
   else if (arg === '--opencode') options.opencode = true;
   else if (arg === '--adal') options.adal = true;
-  else if (arg === '--path') {
+  else if (arg === '--help' || arg === '-h') {
+    console.log(`FiinQuant Skill Installer CLI`);
+    console.log(`\nUsage:`);
+    console.log(`  npx github:nmhaaa3218/FiinQuant-Skill --<host_flag> [options]`);
+    console.log(`\nHost Flags:`);
+    console.log(`  --claude         Install local skill for Claude Code`);
+    console.log(`  --cursor         Install local skill for Cursor`);
+    console.log(`  --gemini         Install local skill for Gemini`);
+    console.log(`  --codex          Install local skill for Codex`);
+    console.log(`  --antigravity    Install local skill for Antigravity`);
+    console.log(`  --agy            Install local skill for agy CLI`);
+    console.log(`  --kiro           Install local skill for Kiro`);
+    console.log(`  --opencode       Install local skill for OpenCode`);
+    console.log(`  --adal           Install local skill for AdaL`);
+    console.log(`\nOptions:`);
+    console.log(`  --path <path>    Specify custom path to deploy skill`);
+    console.log(`  -u, --username   Specify FiinQuant username`);
+    console.log(`  -p, --password   Specify FiinQuant password`);
+    process.exit(0);
+  } else if (arg === '--path') {
     options.customPath = args[++i];
   } else if (arg === '--username' || arg === '-u') {
     options.username = args[++i];

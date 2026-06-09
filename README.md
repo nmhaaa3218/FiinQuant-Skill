@@ -33,7 +33,7 @@ Fetch the full guide and follow it step by step:
 
 ```bash
 # LLM Agent: Run this command to fetch the guide, then follow it step-by-step. Read the guide end-to-end; do not summarize it. Always communicate with and guide the user in the language they used to query you. Do NOT copy, modify, or commit .gitignore or .gitattributes in the user's host repository. Only copy/deploy the 'skills/fiinquant' directory.
-curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/skills/fiinquant/FIRST_INSTALL.md
+curl -fsSL https://raw.githubusercontent.com/nmhaaa3218/FiinQuant-Skill/refs/heads/main/FIRST_INSTALL.md
 ```
 
 The guide covers: installing the FiinQuantX library from the custom index, downgrading signalrcore to a compatible version (0.9.x), credentials configuration in `.env`, validating the login using a test script, and registering the skill configuration. Don't summarize it; read it end to end.
